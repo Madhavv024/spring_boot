@@ -12,7 +12,7 @@ import java.util.function.Function;
 
 @Component
 public class JwtUtils {
-    public static final String jwtSigningSecret = "secret";
+    public static final String jwtSigningSecret = "5367566B59703373367639792F423F4528482B4D6251655468576D5A71347437";
 
     public boolean isTokenExpired(String token) {
         return extractExpiration(token).before(new Date());

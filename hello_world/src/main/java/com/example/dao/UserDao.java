@@ -16,7 +16,7 @@ public class UserDao {
             Arrays.asList(
                     new User("ravi@decoverhq.com", "password",
                             Collections.singleton(new SimpleGrantedAuthority("ROLE_ADMIN"))),
-                    new User("ravitandon2@gmail.com", "password",
+                    new User("ravitandon2@gmail.com", "1234",
                             Collections.singleton(new SimpleGrantedAuthority("ROLE_USER")))
             );
     public UserDetails findUserByEmail(String email) throws UsernameNotFoundException {
