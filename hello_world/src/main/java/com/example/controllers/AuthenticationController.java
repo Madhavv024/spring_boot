@@ -26,11 +26,8 @@ public class AuthenticationController {
 
 
     @PostMapping("/authenticate")
-    public ResponseEntity<String> authenticate(
-        @RequestBody AuthenticationRequest request) {
+    public ResponseEntity<String> authenticate(@RequestBody AuthenticationRequest request) {
         System.out.println("Authentication request: " + request);
-        System.out.println("hello");
-
 //        authenticationManager.authenticate(
 //            new UsernamePasswordAuthenticationToken(
 //                request.getEmail(),
@@ -38,11 +35,15 @@ public class AuthenticationController {
 //            )
 //        );
         UserDetails userDetails = userDao.findUserByEmail(request.getEmail());
-        System.out.println("Username is--" + userDetails.getUsername());
-        if (userDetails != null) {
+        if (userDetails != null && passwordAuthentication(request.getPassword(), userDetails.getPassword())) {
             return ResponseEntity.ok(jwtUtils.generateToken(userDetails));
         } else {
-            return ResponseEntity.status(400).body("Authentication failed");
+            return ResponseEntity.status(400).body("Authentication failed, Incorrect Password");
         }
+    }
+
+    public static boolean passwordAuthentication(String password, String dbPAssword)
+    {
+        return password.equals(dbPAssword);
     }
 }
