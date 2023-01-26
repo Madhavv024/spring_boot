@@ -6,34 +6,38 @@ import com.example.dto.AuthenticationRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
+
 @RestController
-@RequestMapping("/api/auth")
+@RequestMapping("/")
 @RequiredArgsConstructor
 public class AuthenticationController {
     private final AuthenticationManager authenticationManager;
     private final UserDao userDao;
     private final JwtUtils jwtUtils;
 
+
+    @GetMapping("/google")
+    public String welcme(){
+        return "Welcome to Google!";
+    }
     @GetMapping("/hey")
     public String helloWorld() {
         return "Hello world";
     }
 
-
+    @GetMapping("/user")
+    public Principal user(Principal principal){
+        System.out.println("Username is -- "+principal.getName());
+        return principal;
+    }
     @PostMapping("/authenticate")
     public ResponseEntity<String> authenticate(@RequestBody AuthenticationRequest request) {
         System.out.println("Authentication request: " + request);
-//        authenticationManager.authenticate(
-//            new UsernamePasswordAuthenticationToken(
-//                request.getEmail(),
-//                request.getPassword()
-//            )
-//        );
+
         UserDetails userDetails = userDao.findUserByEmail(request.getEmail());
         if (userDetails != null && passwordAuthentication(request.getPassword(), userDetails.getPassword())) {
             return ResponseEntity.ok(jwtUtils.generateToken(userDetails));
@@ -42,8 +46,8 @@ public class AuthenticationController {
         }
     }
 
-    public static boolean passwordAuthentication(String password, String dbPAssword)
+    public static boolean passwordAuthentication(String password, String dbPassword)
     {
-        return password.equals(dbPAssword);
+        return password.equals(dbPassword);
     }
 }

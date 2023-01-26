@@ -47,18 +47,22 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
-        return http.csrf().disable()
-                .authorizeHttpRequests()
-                .requestMatchers("/api/auth/authenticate","/api/auth/hey" ,"/api/v1/greeting/hey" ).permitAll()
+        http
+                .authorizeHttpRequests().anyRequest()
+                .authenticated()
                 .and()
-                .authorizeHttpRequests().requestMatchers("/api/auth/**")
-                .authenticated().and()
-                .sessionManagement()
-                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                .and()
-                .authenticationProvider(authenticationProvider())
-                .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
-                .build();
+                .oauth2Login();
+//                .authorizeHttpRequests()
+//                .requestMatchers("/api/auth/authenticate","/api/auth/hey" ,"/api/v1/greeting/hey" ).permitAll()
+//                .and()
+//                .authorizeHttpRequests().requestMatchers("/api/auth/**")
+//                .authenticated().and()
+//                .sessionManagement()
+//                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+//                .and()
+//                .authenticationProvider(authenticationProvider())
+//                .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
+               return http.build();
 
     }
 
