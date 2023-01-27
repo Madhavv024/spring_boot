@@ -48,11 +48,7 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-
-        http    .authorizeHttpRequests().anyRequest()
-                .authenticated()
-                .and()
-                .oauth2Login().and()
+        http
                 .authorizeHttpRequests()
                 .requestMatchers("/authenticate","/hey" ,"/api/v1/greeting/hey" ).permitAll()
                 .and()
@@ -62,7 +58,8 @@ public class SecurityConfig {
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authenticationProvider(authenticationProvider())
-                .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
+                .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
+                .oauth2Login();
                return http.build();
 
     }
