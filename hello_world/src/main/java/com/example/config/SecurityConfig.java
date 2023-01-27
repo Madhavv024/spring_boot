@@ -14,6 +14,7 @@ import org.springframework.security.authorization.AuthorityAuthorizationManager;
 import org.springframework.security.authorization.AuthorizationDecision;
 import org.springframework.security.authorization.AuthorizationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -39,6 +40,7 @@ import org.springframework.web.servlet.handler.HandlerMappingIntrospector;
 @EnableWebSecurity
 @RequiredArgsConstructor
 @EnableMethodSecurity
+@EnableGlobalMethodSecurity(prePostEnabled=true)
 public class SecurityConfig {
     private final JwtAuthFilter jwtAuthFilter;
     private UserDao userDao;
@@ -47,21 +49,20 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
-        http
-                .authorizeHttpRequests().anyRequest()
+        http    .authorizeHttpRequests().anyRequest()
                 .authenticated()
                 .and()
-                .oauth2Login();
-//                .authorizeHttpRequests()
-//                .requestMatchers("/api/auth/authenticate","/api/auth/hey" ,"/api/v1/greeting/hey" ).permitAll()
-//                .and()
-//                .authorizeHttpRequests().requestMatchers("/api/auth/**")
-//                .authenticated().and()
-//                .sessionManagement()
-//                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-//                .and()
-//                .authenticationProvider(authenticationProvider())
-//                .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
+                .oauth2Login().and()
+                .authorizeHttpRequests()
+                .requestMatchers("/authenticate","/hey" ,"/api/v1/greeting/hey" ).permitAll()
+                .and()
+                .authorizeHttpRequests().requestMatchers("/api/auth/**")
+                .authenticated().and()
+                .sessionManagement()
+                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                .and()
+                .authenticationProvider(authenticationProvider())
+                .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
                return http.build();
 
     }
